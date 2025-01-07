@@ -14,5 +14,4 @@ jobs:
       - name: Use environment variable
         id: use_env_var
         run: |
-          myvar={{  }}
           echo "The value of MY_ENV_VAR is $MY_ENV_VAR"
