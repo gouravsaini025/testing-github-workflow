@@ -14,5 +14,6 @@ jobs:
       - name: Use environment variable
         id: use_env_var
         run: |
-          echo ${{ steps.set_env_var.outputs.MY_ENV_VAR }}
+          x=${{ steps.set_env_var.outputs.MY_ENV_VAR }}
+          echo "$x"
           echo "The value of MY_ENV_VAR is $MY_ENV_VAR"
