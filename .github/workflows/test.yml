@@ -17,3 +17,8 @@ jobs:
           x=${{ steps.set_env_var.outputs.MY_ENV_VAR }}
           echo "$x"
           echo "The value of MY_ENV_VAR is $MY_ENV_VAR"
+          echo "is_error=true" >> $GITHUB_OUTPUT
+      
+        - name: "Exit with failure if status != SUCCEEDED"
+        if: steps.set_env_var.outputs.MY_ENV_VAR != 'myValue' || || steps.use_env_var.outputs.is_error == 'true'
+        run: exit 1
