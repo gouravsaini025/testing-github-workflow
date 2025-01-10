@@ -1,7 +1,5 @@
 name: reload
-
 on: workflow_dispatch
-
 jobs:
   sharpsell:
     name: testing-sharpsell
@@ -9,9 +7,9 @@ jobs:
     steps:
       - name: Set environment variable
         id: set_env_var
-        run:  |
+        run: |
           echo "MY_ENV_VAR=myValue" >> $GITHUB_OUTPUT
-
+          
       - name: Use environment variable
         id: use_env_var
         run: |
@@ -20,6 +18,6 @@ jobs:
           echo "The value of MY_ENV_VAR is $MY_ENV_VAR"
           echo "is_error=true" >> $GITHUB_OUTPUT
       
-        - name: "Exit with failure if status != SUCCEEDED"
-        if: steps.set_env_var.outputs.MY_ENV_VAR != 'myValue' || || steps.use_env_var.outputs.is_error == 'true'
+      - name: "Exit with failure if status != SUCCEEDED"
+        if: steps.set_env_var.outputs.MY_ENV_VAR != 'myValue' || steps.use_env_var.outputs.is_error == 'true'
         run: exit 1
