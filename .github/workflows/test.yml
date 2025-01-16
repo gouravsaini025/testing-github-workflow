@@ -86,7 +86,7 @@ jobs:
           current_date=$(date -u +"%Y-%m-%d %H:%M:%S UTC")
           echo "*Upgraded at:* \`$current_date\`" >> multilineslackmessage.txt
 
-          aws_slack_message='${{ steps.start_aws_instance.outputs.aws_slack_message }}''
+          aws_slack_message='${{ steps.start_aws_instance.outputs.aws_slack_message }}'
           echo "$aws_slack_message" 
           echo "$aws_slack_message" >> multilineslackmessage.txt
           slack_message="$(<multilineslackmessage.txt)"
