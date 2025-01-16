@@ -41,13 +41,19 @@ jobs:
 
           for instance in "${unt_instance_array[@]}"; do
             trimmed_instance=$(echo "$instance" | xargs) # Trim spaces
+            
             echo "Processing instance: $trimmed_instance"
-            trimmed_instances="$trimmed_instances,$trimmed_instance"
-
             if [[ "$trimmed_instance" != *"$env"* ]]; then
               echo "Error: Environment '$env' not present in instance name '$trimmed_instance'"
               exit 1
             fi
+
+            if [ -z "$trimmed_instances" ]; then
+              trimmed_instances="$trimmed_instance"
+            else
+              trimmed_instances="$trimmed_instances,$trimmed_instance"
+            fi
+            
           done
 
           echo "All instances validated successfully!"
