@@ -22,30 +22,35 @@ jobs:
     name: testing-sharpsell
     runs-on: ubuntu-latest
     steps:
-      - name: check_instance_name
+      - name: Check Instance Name
         id: check_instance_name
         run: |
-          
           # Input from the workflow_dispatch
-          echo "Raw input: ${{ github.event.inputs.instance_name }}"
+          raw_input="${{ github.event.inputs.instance_name }}"
+          echo "Raw input: $raw_input"
 
           # Split raw_input into an array (assumes comma-separated input)
           IFS=',' read -r -a unt_instance_array <<< "$raw_input"
           
           # Environment input
           env="${{ github.event.inputs.env }}"
-          
+          echo "Environment: $env"
+
+          # Initialize array for trimmed instances
           instance_array=()
+
           for instance in "${unt_instance_array[@]}"; do
             trimmed_instance=$(echo "$instance" | xargs) # Trim spaces
-            echo "trimmed_instance"
+            echo "Processing instance: $trimmed_instance"
             instance_array+=("$trimmed_instance")
 
             if [[ "$trimmed_instance" != *"$env"* ]]; then
-              echo "$env not present in $instance"
+              echo "Error: Environment '$env' not present in instance name '$trimmed_instance'"
               exit 1
             fi
           done
+
+          echo "All instances validated successfully!"
           
       - name: Set environment variable
         id: set_env_var
