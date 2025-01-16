@@ -37,12 +37,12 @@ jobs:
           echo "Environment: $env"
 
           # Initialize array for trimmed instances
-          instance_array=()
+          trimmed_instances=""
 
           for instance in "${unt_instance_array[@]}"; do
             trimmed_instance=$(echo "$instance" | xargs) # Trim spaces
             echo "Processing instance: $trimmed_instance"
-            instance_array+=("$trimmed_instance")
+            trimmed_instances="$trimmed_instances,$trimmed_instance"
 
             if [[ "$trimmed_instance" != *"$env"* ]]; then
               echo "Error: Environment '$env' not present in instance name '$trimmed_instance'"
@@ -52,7 +52,7 @@ jobs:
 
           echo "All instances validated successfully!"
           echo "$instance_array"
-          echo "instance_array=$instance_array" >> $GITHUB_OUTPUT
+          echo "trimmed_instances=$trimmed_instances" >> $GITHUB_OUTPUT
           
           
       - name: Set environment variable
