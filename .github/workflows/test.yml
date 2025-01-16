@@ -44,6 +44,7 @@ jobs:
             if [[ "$trimmed_instance" != *"$env"* ]]; then
               echo "$env not present in $instance"
               exit 1
+            fi
           done
           
       - name: Set environment variable
