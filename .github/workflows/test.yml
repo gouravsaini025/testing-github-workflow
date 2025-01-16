@@ -59,6 +59,41 @@ jobs:
           echo "All instances validated successfully!"
           echo "$trimmed_instances"
           echo "trimmed_instances=$trimmed_instances" >> $GITHUB_OUTPUT
+      - name :
+        id: start_aws_instance
+        run: |
+          # create a multiline slack message to temporary file
+          echo "" >> awsmultilineslackmessage.txt
+
+          echo "instance 33:instance_id 55 :white_check_mark: "  >> awsmultilineslackmessage.txt
+
+          echo "instance_id 66:instance_id66 :x:  error: $start_output" >> awsmultilineslackmessage.txt
+
+          aws_slack_message="$(<awsmultilineslackmessage.txt)"
+          {
+            echo 'aws_slack_message<<EOF'
+            echo "$aws_slack_message"
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+
+      - name : Format Slack Message
+        id : format_slack_message
+        run : |
+          
+          # create a multiline slack message to temporary file
+          echo "" >> multilineslackmessage.txt
+          echo "*Upgraded By:* \`${{ github.actor }}\`" >> multilineslackmessage.txt
+          current_date=$(date -u +"%Y-%m-%d %H:%M:%S UTC")
+          echo "*Upgraded at:* \`$current_date\`" >> multilineslackmessage.txt
+
+          aws_slack_message=${{ steps.start_aws_instance.outputs.aws_slack_message }}
+          echo "$aws_slack_message"
+          echo "$aws_slack_message" >> multilineslackmessage.txt
+      - name : see message
+        id: see_message
+        run : |
+          message=${{ steps.format_slack_message.outputs.slack_message }}
+          echo "$message"
           
           
       - name: Set environment variable
