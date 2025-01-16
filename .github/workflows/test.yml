@@ -1,5 +1,24 @@
 name: reload
-on: workflow_dispatch
+
+on:
+  workflow_dispatch:
+    inputs:
+      # sprint_name:
+      #   description: "Sprint Version"
+      #   required: true
+      # company_code:
+      #   description: "Company Code"
+      #   required: true
+      env:
+        description: "Environment"
+        required: true
+        default: "dev"
+        type: choice
+        options:
+          - dev
+          - uat
+          - prod
+          - preprod
 jobs:
   sharpsell:
     name: testing-sharpsell
