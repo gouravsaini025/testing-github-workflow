@@ -25,21 +25,22 @@ jobs:
       - name: check_instance_name
         id: check_instance_name
         run: |
+          
           # Input from the workflow_dispatch
           echo "Raw input: ${{ github.event.inputs.instance_name }}"
 
           # Splitting the input into an array
           IFS=',' read -r -a instance_array <<< "${{ github.event.inputs.instance_name }}"
-          
+          env=${{ github.event.inputs.instance_name }}
           found=false
           # Print each instance name for debugging
           echo "Parsed instance names:"
           for instance in "${instance_array[@]}"; do
             echo "Instance: $instance"
             
-            if [[ "$instance" != *"preprod"* ]] || [[ "$instance" != *"dev"* ]]; then
+            if [[ "$instance" != *"$env"* ]]; then
               found=true
-              echo "found is true $instance"
+              echo "$instance is not $env"
               exit 1
             fi
           done
