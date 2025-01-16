@@ -29,18 +29,18 @@ jobs:
           # Input from the workflow_dispatch
           echo "Raw input: ${{ github.event.inputs.instance_name }}"
 
-          # Splitting the input into an array
-          IFS=',' read -r -a instance_array <<< "${{ github.event.inputs.instance_name }}"
-          env=${{ github.event.inputs.instance_name }}
-          found=false
-          # Print each instance name for debugging
-          echo "Parsed instance names:"
+          instance_array=()
+          for instance in "${raw_array[@]}"; do
+            trimmed_instance=$(echo "$instance" | xargs) # Trim spaces
+            instance_array+=("$trimmed_instance")
+          done
+
+          # Environment input
+          env="${{ github.event.inputs.env }}"
+
           for instance in "${instance_array[@]}"; do
-            echo "Instance: $instance"
-            
             if [[ "$instance" != *"$env"* ]]; then
-              found=true
-              echo "$instance is not $env"
+              echo "$env not present in $instance"
               exit 1
             fi
           done
