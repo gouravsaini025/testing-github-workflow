@@ -31,7 +31,10 @@ jobs:
 
           # Split raw_input into an array (assumes comma-separated input)
           IFS=',' read -r -a unt_instance_array <<< "$raw_input"
-
+          
+          # Environment input
+          env="${{ github.event.inputs.env }}"
+          
           instance_array=()
           for instance in "${unt_instance_array[@]}"; do
             trimmed_instance=$(echo "$instance" | xargs) # Trim spaces
@@ -41,17 +44,6 @@ jobs:
             if [[ "$trimmed_instance" != *"$env"* ]]; then
               echo "$env not present in $instance"
               exit 1
-          done
-
-          # Environment input
-          env="${{ github.event.inputs.env }}"
-
-          for instance in "${instance_array[@]}"; do
-            echo "$instance"
-            if [[ "$instance" != *"$env"* ]]; then
-              echo "$env not present in $instance"
-              exit 1
-            fi
           done
           
       - name: Set environment variable
