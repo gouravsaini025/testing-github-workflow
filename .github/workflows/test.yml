@@ -51,6 +51,7 @@ jobs:
           done
 
           echo "All instances validated successfully!"
+          echo "$instance_array"
           echo "instance_array=$instance_array" >> $GITHUB_OUTPUT
           
           
