@@ -65,9 +65,9 @@ jobs:
           # create a multiline slack message to temporary file
           echo "" >> awsmultilineslackmessage.txt
 
-          echo "instance 33:instance_id 55 :white_check_mark: "  >> awsmultilineslackmessage.txt
+          echo "instance 33 instance_id 55 :white_check_mark: "  >> awsmultilineslackmessage.txt
 
-          echo "instance_id 66:instance_id66 :x:  error: $start_output" >> awsmultilineslackmessage.txt
+          echo "instance_id 66 instance_id66 :x:  error: $start_output" >> awsmultilineslackmessage.txt
 
           aws_slack_message="$(<awsmultilineslackmessage.txt)"
           {
