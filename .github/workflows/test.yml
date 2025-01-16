@@ -32,6 +32,7 @@ jobs:
           instance_array=()
           for instance in "${raw_array[@]}"; do
             trimmed_instance=$(echo "$instance" | xargs) # Trim spaces
+            echo "trimmed_instance"
             instance_array+=("$trimmed_instance")
           done
 
