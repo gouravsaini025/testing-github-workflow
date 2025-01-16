@@ -58,7 +58,7 @@ jobs:
         id: set_env_var
         run: |
           x=${{ steps.set_env_var.outputs.instance_array }}
-          echo x
+          echo "$x"
           echo "MY_ENV_VAR=myValue" >> $GITHUB_OUTPUT
           
       - name: Use environment variable
