@@ -39,6 +39,7 @@ jobs:
           env="${{ github.event.inputs.env }}"
 
           for instance in "${instance_array[@]}"; do
+            echo "$instance"
             if [[ "$instance" != *"$env"* ]]; then
               echo "$env not present in $instance"
               exit 1
