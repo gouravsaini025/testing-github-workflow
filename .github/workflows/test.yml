@@ -3,12 +3,10 @@ name: reload
 on:
   workflow_dispatch:
     inputs:
-      # sprint_name:
-      #   description: "Sprint Version"
-      #   required: true
-      # company_code:
-      #   description: "Company Code"
-      #   required: true
+      instance_name:
+        description: "provide aws instance name"
+        required: true
+        type: string
       env:
         description: "Environment"
         required: true
@@ -24,6 +22,21 @@ jobs:
     name: testing-sharpsell
     runs-on: ubuntu-latest
     steps:
+      - name: check_instance_name
+        id: check_instance_name
+        run: |
+          # Input from the workflow_dispatch
+          echo "Raw input: ${{ github.event.inputs.instance_name }}"
+
+          # Splitting the input into an array
+          IFS=',' read -r -a instance_array <<< "${{ github.event.inputs.instance_name }}"
+          
+          # Print each instance name for debugging
+          echo "Parsed instance names:"
+          for instance in "${instance_array[@]}"; do
+            echo "Instance: $instance"
+          done
+          
       - name: Set environment variable
         id: set_env_var
         run: |
