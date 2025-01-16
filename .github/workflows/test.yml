@@ -64,7 +64,7 @@ jobs:
       - name: Set environment variable
         id: set_env_var
         run: |
-          x=${{ steps.set_env_var.outputs.trimmed_instances }}
+          x=${{ steps.check_instance_name.outputs.trimmed_instances }}
           echo "$x"
           echo "MY_ENV_VAR=myValue" >> $GITHUB_OUTPUT
           
