@@ -98,7 +98,7 @@ jobs:
       - name : see message
         id: see_message
         run : |
-          message=${{ steps.format_slack_message.outputs.slack_message }}
+          message='${{ steps.format_slack_message.outputs.slack_message }}''
           echo "$message"
           
           
