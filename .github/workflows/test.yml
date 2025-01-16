@@ -31,10 +31,17 @@ jobs:
           # Splitting the input into an array
           IFS=',' read -r -a instance_array <<< "${{ github.event.inputs.instance_name }}"
           
+          found=false
           # Print each instance name for debugging
           echo "Parsed instance names:"
           for instance in "${instance_array[@]}"; do
             echo "Instance: $instance"
+            
+            if [[ "$instance" != *"preprod"* ]] || [[ "$instance" != *"dev"* ]]; then
+              found=true
+              echo "found is true $instance"
+              exit 1
+            fi
           done
           
       - name: Set environment variable
