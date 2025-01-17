@@ -95,28 +95,37 @@ jobs:
             echo "$slack_message"
             echo 'EOF'
           } >> "$GITHUB_OUTPUT"
+
       - name : see message
         id: see_message
         run : |
-          message='${{ steps.format_slack_message.outputs.slack_message }}''
+          message='${{ steps.format_slack_message.outputs.slack_message }}'
           echo "$message"
+
+      - name: "Send Slack Notification"
+        uses: rtCamp/action-slack-notify@v2
+        with:
+          status: ${{ job.status }}
+        env:
+          # Unescape new line from slack_message env variable and set it to SLACK_MESSAGE
+          SLACK_MESSAGE: ${{ steps.format_slack_message.outputs.slack_message }}
+          SLACK_WEBHOOK: ${{ secrets.TESTING_SHARPSELL_SLACK_WEBHOOK }}
           
+      # - name: Set environment variable
+      #   id: set_env_var
+      #   run: |
+      #     x=${{ steps.check_instance_name.outputs.trimmed_instances }}
+      #     echo "$x"
+      #     echo "MY_ENV_VAR=myValue" >> $GITHUB_OUTPUT
           
-      - name: Set environment variable
-        id: set_env_var
-        run: |
-          x=${{ steps.check_instance_name.outputs.trimmed_instances }}
-          echo "$x"
-          echo "MY_ENV_VAR=myValue" >> $GITHUB_OUTPUT
-          
-      - name: Use environment variable
-        id: use_env_var
-        run: |
-          x=${{ steps.set_env_var.outputs.MY_ENV_VAR }}
-          echo "$x"
-          echo "The value of MY_ENV_VAR is $MY_ENV_VAR"
-          echo "is_error=false" >> $GITHUB_OUTPUT
+      # - name: Use environment variable
+      #   id: use_env_var
+      #   run: |
+      #     x=${{ steps.set_env_var.outputs.MY_ENV_VAR }}
+      #     echo "$x"
+      #     echo "The value of MY_ENV_VAR is $MY_ENV_VAR"
+      #     echo "is_error=false" >> $GITHUB_OUTPUT
       
-      - name: "Exit with failure if status != SUCCEEDED"
-        if: steps.set_env_var.outputs.MY_ENV_VAR != 'myValue' || steps.use_env_var.outputs.is_error == 'true'
-        run: exit 1
+      # - name: "Exit with failure if status != SUCCEEDED"
+      #   if: steps.set_env_var.outputs.MY_ENV_VAR != 'myValue' || steps.use_env_var.outputs.is_error == 'true'
+      #   run: exit 1
