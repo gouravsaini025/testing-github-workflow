@@ -82,8 +82,8 @@ jobs:
           
           # create a multiline slack message to temporary file
           echo "" >> multilineslackmessage.txt
-          echo "action: *Start EC2 Instance*"
-          echo "\`action\`: *Start EC2 Instance* "
+          echo "action: *Start EC2 Instance*" >> multilineslackmessage.txt
+          echo "\`action\`: *Start EC2 Instance* " >> multilineslackmessage.txt
           echo "*Upgraded By:* \`${{ github.actor }}\`" >> multilineslackmessage.txt
           current_date=$(date -u +"%Y-%m-%d %H:%M:%S UTC")
           echo "*Upgraded at:* \`$current_date\`" >> multilineslackmessage.txt
