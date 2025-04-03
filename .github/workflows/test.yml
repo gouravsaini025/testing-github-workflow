@@ -87,29 +87,30 @@ jobs:
           current_date=$(date -u +"%Y-%m-%d %H:%M:%S UTC")
           echo "*Upgraded at:* \`$current_date\`" >> multilineslackmessage.txt
 
-          # Add the AWS status message
-          aws_slack_message="---------
+          # Add the AWS status message using heredoc syntax
+          cat << 'EOL' >> multilineslackmessage.txt
+---------
 *Company Code:* \`glowderma\`
 *Environment:* \`prod\`
 
 :black_left_pointing_double_triangle_with_vertical_bar: *Before Upgrade*
 *Versions:* \`\`\`
 {
-  \"Sprint Name\": \": Firestorm Release 3.19.22\",
-  \"Last Reloaded On\": \": 2024-07-18 20:18:22\",
-  \"Sharpsell Backend\": \": v3.1.94-hf2\",
-  \"Sharpsell Python Backend\": \": v1.0.46-hf2\",
-  \"Convergence\": \": v1.7.0-hf2\",
-  \"Core Service\": \": v1.1.52\",
-  \"Poster Backend\": \": v1.0.4-hf2\",
-  \"Superset\": \": v1.0.3\",
-  \"Superset React App\": \": v1.0.10\",
-  \"Superset Backend App\": \": v1.0.10\",
-  \"Moengage\": \": v1.0.1\",
-  \"SS Cron Job\": \": v1.0.3\",
-  \"React DPE Web App\": \": v1.0.5\",
-  \"Web Admin (/admin)\": \": v3.19.0\",
-  \"Infra Version\": \": v1.0.77-hf2\"
+  "Sprint Name": ": Firestorm Release 3.19.22",
+  "Last Reloaded On": ": 2024-07-18 20:18:22",
+  "Sharpsell Backend": ": v3.1.94-hf2",
+  "Sharpsell Python Backend": ": v1.0.46-hf2",
+  "Convergence": ": v1.7.0-hf2",
+  "Core Service": ": v1.1.52",
+  "Poster Backend": ": v1.0.4-hf2",
+  "Superset": ": v1.0.3",
+  "Superset React App": ": v1.0.10",
+  "Superset Backend App": ": v1.0.10",
+  "Moengage": ": v1.0.1",
+  "SS Cron Job": ": v1.0.3",
+  "React DPE Web App": ": v1.0.5",
+  "Web Admin (/admin)": ": v3.19.0",
+  "Infra Version": ": v1.0.77-hf2"
 }
 \`\`\`
 
@@ -121,32 +122,30 @@ jobs:
 *Sprint Name:* \`Mad Max Release - v4.0.28\`
 *Upgraded Versions:* \`\`\`
 {
-  \"poster_api_img_version\": \"v1.0.6\",
-  \"ss_cron_jobs_img_version\": \"v1.0.8-hf1\",
-  \"mo_engage_img_version\": \"v1.0.1\",
-  \"sharpsellbackend_img_version\": \"v3.1.171-hf3\",
-  \"infra_version\": \"v1.0.102-hf6\",
-  \"superset_react_img_version\": \"v1.0.10\",
-  \"superset_app_img_version\": \"v1.0.7\",
-  \"superset_backend_img_version\": \"v1.0.11\",
-  \"py_api_img_version\": \"v1.0.98-hf7\",
-  \"core_service_api_img_version\": \"v1.1.71-hf1\",
-  \"react_dpe_app_img_version\": \"v1.0.6\",
-  \"web_admin_version\": \"sprint-madmax\",
-  \"convergence_api_img_version\": \"v1.18.0-hf1\",
-  \"posters_app_version\": \"v3.0.7\",
-  \"py_etl_img_version\": \"v1.1.0-hf8\"
+  "poster_api_img_version": "v1.0.6",
+  "ss_cron_jobs_img_version": "v1.0.8-hf1",
+  "mo_engage_img_version": "v1.0.1",
+  "sharpsellbackend_img_version": "v3.1.171-hf3",
+  "infra_version": "v1.0.102-hf6",
+  "superset_react_img_version": "v1.0.10",
+  "superset_app_img_version": "v1.0.7",
+  "superset_backend_img_version": "v1.0.11",
+  "py_api_img_version": "v1.0.98-hf7",
+  "core_service_api_img_version": "v1.1.71-hf1",
+  "react_dpe_app_img_version": "v1.0.6",
+  "web_admin_version": "sprint-madmax",
+  "convergence_api_img_version": "v1.18.0-hf1",
+  "posters_app_version": "v3.0.7",
+  "py_etl_img_version": "v1.1.0-hf8"
 }
 \`\`\`
+-----
+EOL
 
------"
-          
-          echo "$aws_slack_message" 
-          echo "$aws_slack_message" >> multilineslackmessage.txt
-          slack_message="$(<multilineslackmessage.txt)"
+          # Set the output
           {
             echo 'slack_message<<EOF'
-            echo "$slack_message"
+            cat multilineslackmessage.txt
             echo 'EOF'
           } >> "$GITHUB_OUTPUT"
 
