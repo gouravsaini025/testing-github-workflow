@@ -32,3 +32,4 @@ jobs:
           workflow: step2-confirm-deployment.yml
           ref: main
           inputs: '{"env": "${{ inputs.env }}", "company_code": "${{ inputs.company_code }}"}'
+          token: ${{ secrets.PAT }}  # Use PAT instead of GITHUB_TOKEN
