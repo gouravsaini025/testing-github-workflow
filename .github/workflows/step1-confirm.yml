@@ -1,4 +1,4 @@
-name: Step 1 - Request Production Deployment
+name: Deploy with Double Environment Approval
 
 on:
   workflow_dispatch:
@@ -17,19 +17,53 @@ on:
         type: string
 
 jobs:
-  create_approval:
+  initial_validation:
     runs-on: ubuntu-latest
-    if: ${{ inputs.env == 'prod' }}
+    outputs:
+      company_code: ${{ inputs.company_code }}
+      env: ${{ inputs.env }}
     steps:
-      - name: Create deployment approval
+      - name: Validate inputs
         run: |
           echo "Environment: ${{ inputs.env }}"
           echo "Company Code: ${{ inputs.company_code }}"
           
-      - name: Create second workflow
-        uses: benc-uk/workflow-dispatch@v1
-        with:
-          workflow: step2-confirm-deployment.yml
-          ref: main
-          inputs: '{"env": "${{ inputs.env }}", "company_code": "${{ inputs.company_code }}"}'
-          token: ${{ secrets.PAT }}  # Use PAT instead of GITHUB_TOKEN
+  first_confirmation:
+    needs: initial_validation
+    if: ${{ needs.initial_validation.outputs.env == 'prod' }}
+    environment: prod-first-approval
+    runs-on: ubuntu-latest
+    steps:
+      - name: First confirmation step
+        run: echo "First approval for deploying to PRODUCTION with company code ${{ needs.initial_validation.outputs.company_code }}"
+  
+  final_confirmation:
+    needs: [initial_validation, first_confirmation]
+    if: ${{ needs.initial_validation.outputs.env == 'prod' }}
+    environment: prod-final-approval
+    runs-on: ubuntu-latest
+    steps:
+      - name: Final confirmation step
+        run: echo "Final approval for deploying to PRODUCTION with company code ${{ needs.initial_validation.outputs.company_code }}"
+          
+  deploy:
+    needs: [initial_validation, final_confirmation]
+    if: ${{ needs.initial_validation.outputs.env == 'prod' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Deploy to PRODUCTION
+        run: |
+          echo "Deploying to PRODUCTION for company: ${{ needs.initial_validation.outputs.company_code }}"
+          # Your actual deployment code here
+          
+  deploy_non_prod:
+    needs: initial_validation
+    if: ${{ needs.initial_validation.outputs.env != 'prod' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Deploy to non-production
+        run: |
+          echo "Deploying to ${{ needs.initial_validation.outputs.env }} for company: ${{ needs.initial_validation.outputs.company_code }}"
+          # Your actual deployment code here
