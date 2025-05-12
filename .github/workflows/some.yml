@@ -11,7 +11,7 @@ jobs:
     steps:
       - name: First Interactive Input
         id: interactive-inputs1
-        uses: boasihq/interactive-inputs@v2
+        uses: boasihq/interactive-inputs@v2.4.0
         with:
           interactive: |
             fields:
@@ -32,7 +32,7 @@ jobs:
     steps:
       - name: Second Interactive Input
         id: interactive-inputs2
-        uses: boasihq/interactive-inputs@v2
+        uses: boasihq/interactive-inputs@v2.4.0
         with:
           interactive: |
             fields:
