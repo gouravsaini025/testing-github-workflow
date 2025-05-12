@@ -1,0 +1,59 @@
+name: Workflow with Input Verification
+
+on:
+  workflow_dispatch:
+
+jobs:
+  first-input:
+    runs-on: ubuntu-latest
+    outputs:
+      first-value: ${{ steps.interactive-inputs1.outputs.verification-code }}
+    steps:
+      - name: First Interactive Input
+        id: interactive-inputs1
+        uses: boasihq/interactive-inputs@v2
+        with:
+          interactive: |
+            fields:
+              - label: verification-code
+                properties:
+                  display: Enter your verification code
+                  type: text
+                  description: Please enter a verification code
+                  required: true
+                  
+      - name: Show First Input
+        run: echo "First verification code: ${{ steps.interactive-inputs1.outputs.verification-code }}"
+
+  second-input:
+    needs: first-input
+    runs-on: ubuntu-latest
+    steps:
+      - name: Second Interactive Input
+        id: interactive-inputs2
+        uses: boasihq/interactive-inputs@v2
+        with:
+          interactive: |
+            fields:
+              - label: verification-code
+                properties:
+                  display: Re-enter your verification code
+                  type: text
+                  description: Please re-enter the same verification code
+                  required: true
+                  
+      - name: Verify Inputs Match
+        run: |
+          FIRST_CODE="${{ needs.first-input.outputs.first-value }}"
+          SECOND_CODE="${{ steps.interactive-inputs2.outputs.verification-code }}"
+          
+          echo "First code: $FIRST_CODE"
+          echo "Second code: $SECOND_CODE"
+          
+          if [ "$FIRST_CODE" = "$SECOND_CODE" ]; then
+            echo "✅ Verification successful! Codes match."
+            exit 0
+          else
+            echo "❌ Verification failed! Codes do not match."
+            exit 1
+          fi
