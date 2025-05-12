@@ -32,7 +32,7 @@ jobs:
       
       - name: Upload confirmation for review
         if: ${{ inputs.env == 'prod' }}
-        uses: actions/upload-artifact@v3.1.2
+        uses: actions/upload-artifact@v4
         with:
           name: deployment-confirmation
           path: confirmation.txt
@@ -47,7 +47,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download confirmation
-        uses: actions/download-artifact@v3.0.2
+        uses: actions/download-artifact@v4
         with:
           name: deployment-confirmation
       
