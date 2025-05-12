@@ -1,69 +1,63 @@
-name: Deploy with Double Environment Approval
+name: Validate and Deploy
 
 on:
   workflow_dispatch:
     inputs:
-      env:
-        description: 'Environment to deploy to'
-        required: true
-        type: choice
-        options:
-          - dev
-          - stage
-          - prod
       company_code:
-        description: 'Company code'
+        description: 'Company Code'
         required: true
-        type: string
+      env:
+        description: 'Environment (dev/stage/prod)'
+        required: true
+        default: 'dev'
 
 jobs:
-  initial_validation:
+  validate:
     runs-on: ubuntu-latest
-    outputs:
-      company_code: ${{ inputs.company_code }}
-      env: ${{ inputs.env }}
     steps:
-      - name: Validate inputs
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Validate company code for production
+        if: ${{ inputs.env == 'prod' }}
         run: |
-          echo "Environment: ${{ inputs.env }}"
-          echo "Company Code: ${{ inputs.company_code }}"
+          # Display confirmation message
+          echo "::notice::⚠️ PRODUCTION DEPLOYMENT for company code ${{ inputs.company_code }} ⚠️"
           
-  first_confirmation:
-    needs: initial_validation
-    if: ${{ needs.initial_validation.outputs.env == 'prod' }}
-    environment: prod-first-approval
-    runs-on: ubuntu-latest
-    steps:
-      - name: First confirmation step
-        run: echo "First approval for deploying to PRODUCTION with company code ${{ needs.initial_validation.outputs.company_code }}"
-  
-  final_confirmation:
-    needs: [initial_validation, first_confirmation]
-    if: ${{ needs.initial_validation.outputs.env == 'prod' }}
-    environment: prod-final-approval
-    runs-on: ubuntu-latest
-    steps:
-      - name: Final confirmation step
-        run: echo "Final approval for deploying to PRODUCTION with company code ${{ needs.initial_validation.outputs.company_code }}"
-          
-  deploy:
-    needs: [initial_validation, final_confirmation]
-    if: ${{ needs.initial_validation.outputs.env == 'prod' }}
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Deploy to PRODUCTION
+      - name: Create confirmation file
+        if: ${{ inputs.env == 'prod' }}
         run: |
-          echo "Deploying to PRODUCTION for company: ${{ needs.initial_validation.outputs.company_code }}"
-          # Your actual deployment code here
-          
-  deploy_non_prod:
-    needs: initial_validation
-    if: ${{ needs.initial_validation.outputs.env != 'prod' }}
+          echo "Company code: ${{ inputs.company_code }}" > confirmation.txt
+          echo "Environment: ${{ inputs.env }}" >> confirmation.txt
+      
+      - name: Upload confirmation for review
+        if: ${{ inputs.env == 'prod' }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: deployment-confirmation
+          path: confirmation.txt
+
+  confirm-and-deploy:
+    needs: validate
+    if: ${{ github.event.inputs.env == 'prod' }}
+    environment:
+      name: production
+      # URL to the deployment (optional)
+      url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Deploy to non-production
+      - name: Download confirmation
+        uses: actions/download-artifact@v3
+        with:
+          name: deployment-confirmation
+      
+      - name: Display confirmation
         run: |
-          echo "Deploying to ${{ needs.initial_validation.outputs.env }} for company: ${{ needs.initial_validation.outputs.company_code }}"
-          # Your actual deployment code here
+          echo "⚠️ PRODUCTION DEPLOYMENT CONFIRMATION ⚠️"
+          cat confirmation.txt
+          echo "Proceeding with deployment for company code ${{ github.event.inputs.company_code }} to PRODUCTION"
+      
+      - name: Deploy to production
+        run: |
+          echo "Deploying to production for company ${{ github.event.inputs.company_code }}"
+          # Your deployment steps here
