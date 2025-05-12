@@ -23,7 +23,8 @@ jobs:
                   required: true
                   
       - name: Show First Input
-        run: echo "First verification code: ${{ steps.interactive-inputs1.outputs.verification-code }}"
+        run: |
+          echo "First verification code: ${{ steps.interactive-inputs1.outputs.verification-code }}"
 
   second-input:
     needs: first-input
