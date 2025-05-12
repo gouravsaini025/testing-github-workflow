@@ -1,0 +1,24 @@
+name: Step 2 - Confirm Production Deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      env:
+        description: 'Environment to deploy to'
+        required: true
+        type: string
+      company_code:
+        description: 'Confirm company code for PRODUCTION deployment'
+        required: true
+        type: string
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Deploy to ${{ inputs.env }}
+        run: |
+          echo "Deploying to ${{ inputs.env }} for company: ${{ inputs.company_code }}"
+          # Your deployment script here

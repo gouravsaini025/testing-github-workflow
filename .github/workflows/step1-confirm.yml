@@ -1,0 +1,34 @@
+name: Step 1 - Request Production Deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      env:
+        description: 'Environment to deploy to'
+        required: true
+        type: choice
+        options:
+          - dev
+          - stage
+          - prod
+      company_code:
+        description: 'Company code'
+        required: true
+        type: string
+
+jobs:
+  create_approval:
+    runs-on: ubuntu-latest
+    if: ${{ inputs.env == 'prod' }}
+    steps:
+      - name: Create deployment approval
+        run: |
+          echo "Environment: ${{ inputs.env }}"
+          echo "Company Code: ${{ inputs.company_code }}"
+          
+      - name: Create second workflow
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: step2-confirm-deployment.yml
+          ref: main
+          inputs: '{"env": "${{ inputs.env }}", "company_code": "${{ inputs.company_code }}"}'
