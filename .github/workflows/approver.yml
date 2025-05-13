@@ -4,13 +4,21 @@ permissions:
   issues: write
   contents: read
 
+
 on:
-  workflow_dispatch:
-    inputs:
-      reason:
-        description: 'Reason for running this workflow'
-        required: true
-        default: 'Routine deployment'
+workflow_dispatch:
+  inputs:
+    company_code:
+      description: 'Company Code'
+      required: true
+      type: string
+    env:
+      description: 'Environment'
+      required: true
+      type: choice
+      options:
+        - dev
+        - prod
 
 jobs:
   approval:
