@@ -6,19 +6,19 @@ permissions:
 
 
 on:
-workflow_dispatch:
-  inputs:
-    company_code:
-      description: 'Company Code'
-      required: true
-      type: string
-    env:
-      description: 'Environment'
-      required: true
-      type: choice
-      options:
-        - dev
-        - prod
+  workflow_dispatch:
+    inputs:
+      company_code:
+        description: 'Company Code'
+        required: true
+        type: string
+      env:
+        description: 'Environment'
+        required: true
+        type: choice
+        options:
+          - dev
+          - prod
 
 jobs:
   approval:
