@@ -1,5 +1,9 @@
 name: Manual Workflow with Approval
 
+permissions:
+  issues: write
+  contents: read
+
 on:
   workflow_dispatch:
     inputs:
