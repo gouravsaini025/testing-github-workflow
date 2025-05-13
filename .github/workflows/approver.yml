@@ -1,0 +1,34 @@
+name: Manual Workflow with Approval
+
+on:
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Reason for running this workflow'
+        required: true
+        default: 'Routine deployment'
+
+jobs:
+  approval:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pending approval
+        uses: trstringer/manual-approval@v1
+        with:
+          secret: ${{ secrets.GITHUB_TOKEN }}
+          approvers: gouravsaini025,gouravsaini021,adayush
+          minimum-approvals: 1
+          issue-title: "Approval required for workflow run"
+          issue-body: "Please approve or deny the workflow run:\n\nReason: ${{ github.event.inputs.reason }}"
+          exclude-workflow-initiator-as-approver: false
+          additional-approved-words: 'approve,approved,lgtm,yes'
+          additional-denied-words: 'deny,denied,no'
+          
+  main-job:
+    needs: approval
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      # Your actual workflow steps here
+      - name: Run after approval
+        run: echo "Workflow was approved and is now running!"
