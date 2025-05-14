@@ -27,20 +27,20 @@ jobs:
       - name: Approval Check
         run: echo "Delete operation for company code ${{ github.event.inputs.company_code }} in ${{ github.event.inputs.env }} environment has been approved by required reviewers"
         
-  deploy:
-    name: "Delete Company ${{ github.event.inputs.company_code }} in ${{ github.event.inputs.env }}"
-    needs: request-approval
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
+  # deploy:
+  #   name: "Delete Company ${{ github.event.inputs.company_code }} in ${{ github.event.inputs.env }}"
+  #   needs: request-approval
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
       
-      - name: Set up environment
-        run: |
-          echo "Setting up for delete operation"
-          echo "Company Code: ${{ github.event.inputs.company_code }}"
-          echo "Environment: ${{ github.event.inputs.env }}"
+  #     - name: Set up environment
+  #       run: |
+  #         echo "Setting up for delete operation"
+  #         echo "Company Code: ${{ github.event.inputs.company_code }}"
+  #         echo "Environment: ${{ github.event.inputs.env }}"
           
-      - name: Execute Delete Operation
-        run: |
-          echo "Executing delete operation for Company Code: ${{ github.event.inputs.company_code }} in ${{ github.event.inputs.env }} environment"
-          # Add your actual deletion commands here
+  #     - name: Execute Delete Operation
+  #       run: |
+  #         echo "Executing delete operation for Company Code: ${{ github.event.inputs.company_code }} in ${{ github.event.inputs.env }} environment"
+  #         # Add your actual deletion commands here
