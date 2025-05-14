@@ -29,8 +29,8 @@ jobs:
         uses: trstringer/manual-approval@v1
         with:
           secret: ${{ secrets.GITHUB_TOKEN }}
-          approvers: gouravsaini025
-          minimum-approvals: 1
+          approvers: gouravsaini025,adayush
+          minimum-approvals: 2
           issue-title: "Approval required for workflow run"
           issue-body: "Please approve or deny the workflow run:\n\nReason: ${{ github.event.inputs.reason }}"
           exclude-workflow-initiator-as-approver: false
