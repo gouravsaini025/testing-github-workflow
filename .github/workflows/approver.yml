@@ -31,8 +31,19 @@ jobs:
           secret: ${{ secrets.GITHUB_TOKEN }}
           approvers: gouravsaini025,adayush
           minimum-approvals: 2
-          issue-title: "Approval required for workflow run"
-          issue-body: "Please approve or deny the workflow run:\n\nReason: ${{ github.event.inputs.reason }}"
+          issue-title: "[CRITICAL] Infrastructure Cleanup Approval Required for ${{ github.event.inputs.company_code }}"
+          issue-body: |
+          ⚠️ **Infrastructure Deletion Request**
+          
+          Please review and approve/deny the following infrastructure cleanup:
+          
+          **Details:**
+          - **Company Code**: `${{ github.event.inputs.company_code }}`
+          - **Environment**: `${{ github.event.inputs.env }}`
+          - **Requested by**: `${{ github.actor }}`
+          
+          ⚡ **Note**: This action will permanently delete infrastructure resources.
+          Please verify the details carefully before approving.
           exclude-workflow-initiator-as-approver: false
           additional-approved-words: 'approve,approved,lgtm,yes'
           additional-denied-words: 'deny,denied,no'
