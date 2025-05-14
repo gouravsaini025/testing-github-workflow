@@ -32,18 +32,7 @@ jobs:
           approvers: gouravsaini025,adayush
           minimum-approvals: 2
           issue-title: "[CRITICAL] Infrastructure Cleanup Approval Required for ${{ github.event.inputs.company_code }}"
-          issue-body: |
-          ⚠️ **Infrastructure Deletion Request**
-          
-          Please review and approve/deny the following infrastructure cleanup:
-          
-          **Details:**
-          - **Company Code**: `${{ github.event.inputs.company_code }}`
-          - **Environment**: `${{ github.event.inputs.env }}`
-          - **Requested by**: `${{ github.actor }}`
-          
-          ⚡ **Note**: This action will permanently delete infrastructure resources.
-          Please verify the details carefully before approving.
+          issue-body: "⚠️ **Infrastructure Deletion Request**\n\nPlease review and approve/deny the following infrastructure cleanup:\n\n**Details:**\n- **Company Code**: `${{ github.event.inputs.company_code }}`\n- **Environment**: `${{ github.event.inputs.env }}`\n- **Requested by**: `${{ github.actor }}`\n\n⚡ **Note**: This action will permanently delete infrastructure resources.\nPlease verify the details carefully before approving."
           exclude-workflow-initiator-as-approver: false
           additional-approved-words: 'approve,approved,lgtm,yes'
           additional-denied-words: 'deny,denied,no'
