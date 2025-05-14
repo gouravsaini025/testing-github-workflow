@@ -4,11 +4,17 @@ on:
   # Triggered manually from the Actions tab
   workflow_dispatch:
     inputs:
-      deployment_reason:
-        description: 'Reason for deployment'
+      company_code:
+        description: "Company Code"
         required: true
-        type: string
-        default: 'Regular release'
+      env:
+        description: "Environment"
+        required: true
+        default: "dev"
+        type: choice
+        options:
+          - dev
+          - prod
 
 jobs:
   request-approval:
@@ -21,6 +27,7 @@ jobs:
         run: echo "Deployment to production has been approved by required reviewers"
         
   deploy:
+    name: "Delete <Company Code: ${{ github.event.inputs.company_code }}, Environment: ${{ github.event.inputs.env }}>"
     needs: request-approval
     runs-on: ubuntu-latest
     steps:
