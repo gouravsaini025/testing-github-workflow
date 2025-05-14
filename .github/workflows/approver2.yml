@@ -1,0 +1,37 @@
+name: Manual Workflow with Two Required Approvals
+
+on:
+  # Triggered manually from the Actions tab
+  workflow_dispatch:
+    inputs:
+      deployment_reason:
+        description: 'Reason for deployment'
+        required: true
+        type: string
+        default: 'Regular release'
+
+jobs:
+  request-approval:
+    runs-on: ubuntu-latest
+    # Using the production environment with required reviewers
+    environment:
+      name: production
+    steps:
+      - name: Approval Check
+        run: echo "Deployment to production has been approved by required reviewers"
+        
+  deploy:
+    needs: request-approval
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up environment
+        run: |
+          echo "Setting up production environment"
+          
+      - name: Deploy
+        run: |
+          echo "Deploying to production"
+          echo "Deployment reason: ${{ github.event.inputs.deployment_reason }}"
+          # Add your actual deployment commands here
